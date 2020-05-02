@@ -361,6 +361,7 @@ Rcpp::List spatialSEIRModel::sample_Beaumont2009(int nSample, int vb,
                               this);     
 		if (verbose > 3){
 			for (i = 0; i < preproposal_params.rows(); i++){
+				Rcpp::Rcout << "w:" << w1(i) << "\t-->\t";
 				for (j = 0; j < preproposal_params.cols(); j++){
 					Rcpp::Rcout << preproposal_params(i,j) << "\t";
 				}
