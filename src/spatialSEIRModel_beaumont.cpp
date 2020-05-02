@@ -359,6 +359,14 @@ Rcpp::List spatialSEIRModel::sample_Beaumont2009(int nSample, int vb,
                               fixed,
                               generator,
                               this);     
+		if (verbose > 3){
+			for (i = 0; i < preproposal_params.rows(); i++){
+				for (j = 0; j < preproposal_params.cols(); j++){
+					Rcpp::Rcout << preproposal_params(i,j) << "\t";
+				}
+				Rcpp::Rcout << "\n";
+			}
+		}
                 // Hack - fix S0, which is subject to constraints
                 //for (int loc = preproposal_params.cols() - 1; loc >= preproposal_params.cols() - sz*4; loc --){
                 int startIVC = preproposal_params.cols() - sz*4;
