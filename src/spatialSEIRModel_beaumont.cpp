@@ -381,6 +381,10 @@ Rcpp::List spatialSEIRModel::sample_Beaumont2009(int nSample, int vb,
            //std::vector<size_t> preproposal_order = sort_indexes_eigen(preproposal_results); 
            for (i = 0; i < Nsim && currentIdx < Npart; i++)
            {
+               if (verbose > 3)
+			         {
+					         Rcpp::Rcout << "result(" << i << "): " << preproposal_results(i,0) << "\n";
+			         }
                if (preproposal_results(i,0) < e1)
                {
                    proposed_param_matrix.row(currentIdx) = 
