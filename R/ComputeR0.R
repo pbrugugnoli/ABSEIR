@@ -84,8 +84,8 @@ ComputeR0 <- function(SimObject, cores = 1)
     rho <- paramvec[(nBetaSE + nBetaRS + 1):(nBetaSE + nBetaRS + nRho + nLRho)]
     
     if (transition_priors$mode == "exponential"){
-        gamma_EI <- paramvec[length(paramvec) - 1]
-        gamma_IR <- paramvec[length(paramvec)]
+        gamma_EI <- paramvec[which(colnames(SimObject$params)=="gamma_EI")]
+        gamma_IR <- paramvec[which(colnames(SimObject$params)=="gamma_IR")]
         
         p_EI <- 1-exp(-gamma_EI) 
         p_IR <- 1-exp(-gamma_IR) 
