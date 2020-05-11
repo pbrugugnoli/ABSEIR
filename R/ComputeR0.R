@@ -259,8 +259,8 @@ ComputeR0 <- function(SimObject, cores = 1, eta_export = TRUE, instDetail_export
     SimObject$simulationResults[[sim]][["R_EA"]] <- repNums[[sim]][["r_EA"]]
     SimObject$simulationResults[[sim]][["eta_SE"]] <- repNums[[sim]][["eta_SE"]]
     SimObject$simulationResults[[sim]][["instExpect"]] <- repNums[[sim]][["instExpect"]]
-    SimObject$simulationResults[[sim]][["instNonSpatioExpect"]] <- repNums[[sim]][["peb_nse"]]
-    SimObject$simulationResults[[sim]][["instSpatioExpect"]] <- repNums[[sim]][["peb_se"]]
+    SimObject$simulationResults[[sim]][["instNonSpatioExpect"]] <- repNums[[sim]][["nse"]]
+    SimObject$simulationResults[[sim]][["instSpatioExpect"]] <- repNums[[sim]][["se"]]
   }
 
   return(SimObject)
