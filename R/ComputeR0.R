@@ -243,7 +243,7 @@ ComputeR0 <- function(SimObject, cores = 1, eta_export = TRUE, instExpect_export
   #}
   for (sim in 1:length(repNums)){
     SimObject$simulationResults[[sim]][["R_EA"]] <- repNums[[sim]][["r_EA"]]
-    SimObject$simulationResults[[sim]][["eta"]] <- repNums[[sim]][["eta"]]
+    SimObject$simulationResults[[sim]][["eta_SE"]] <- repNums[[sim]][["eta_SE"]]
     SimObject$simulationResults[[sim]][["instExpect"]] <- repNums[[sim]][["instExpect"]]
   }
 
