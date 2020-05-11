@@ -17,7 +17,7 @@
 #' @import parallel
 #' @importFrom compiler cmpfun
 #' @export
-ComputeR0 <- function(SimObject, cores = 1)
+ComputeR0 <- function(SimObject, cores = 1, eta_export = TRUE, instExpect_export = TRUE)
 { 
   checkArgument("SimObject", mustHaveClass("PosteriorSimulation"))
   #cores <- SimObject$modelObject$modelComponents$sampling_control$n_cores
@@ -136,7 +136,16 @@ ComputeR0 <- function(SimObject, cores = 1)
       eta_RS <- exp(X_RS %*% beta_RS)
       p_RS <- 1-exp(-eta_RS)
     }
-    eta_SE = matrix(exp(X_SE %*% beta_SE), nrow = nTpt, ncol = length(N))
+    eta_SE = matrix(exp(X_SE %*% beta_SE), nrow = nTpt, ncol = length(N)) 
+
+    # Begin PEB extract
+    results <- list()
+    if (eta_export == TRUE) {
+      colnames(eta_SE) <- paste("location_", 1:ncol(eta_SE), sep = "")
+      results[["eta_SE"]] <- eta_SE
+    }
+    # End PEB Extract
+
     instantaneousExpectation <- matrix(NA, nrow = nTpt, ncol = nLoc)
     for (i in 1:nTpt)
     {
@@ -173,6 +182,14 @@ ComputeR0 <- function(SimObject, cores = 1)
       instantaneousExpectation[i,] <- nonSpatialExpectation + spatialExpectation + laggedSpatialExpectation
     }
     r_EA <- instantaneousExpectation
+    
+    # Begin PEB extract
+    if (instExpect_export == TRUE) {
+      colnames(r_EA) <- paste("location_", 1:ncol(r_EA), sep = "")
+      results[["instExpect"]] <- r_EA
+    }
+    # End PEB Extract
+    
     if (transition_priors$mode == "exponential"){
       p_IR <- 1-exp(-gamma_EI)
       for (i in 1:nrow(r_EA))
@@ -206,7 +223,12 @@ ComputeR0 <- function(SimObject, cores = 1)
       # To-do
     }
     colnames(r_EA) <- paste("location_", 1:ncol(r_EA), sep = "")
-    r_EA
+
+    # Begin PEB extract
+    # r_EA
+    results[["r_EA"]] <- r_EA
+    results
+    # End PEB Extract
   }
 
   r0FuncC <- cmpfun(r0Func)
@@ -216,9 +238,15 @@ ComputeR0 <- function(SimObject, cores = 1)
 
   stopCluster(cl)
   print("Done with R0sim")
+  #for (sim in 1:length(repNums)){
+  #  SimObject$simulationResults[[sim]][["R_EA"]] <- repNums[[sim]]
+  #}
   for (sim in 1:length(repNums)){
-    SimObject$simulationResults[[sim]][["R_EA"]] <- repNums[[sim]]
+    SimObject$simulationResults[[sim]][["R_EA"]] <- repNums[[sim]][["r_EA"]]
+    SimObject$simulationResults[[sim]][["eta"]] <- repNums[[sim]][["eta"]]
+    SimObject$simulationResults[[sim]][["instExpect"]] <- repNums[[sim]][["instExpect"]]
   }
+
   return(SimObject)
 
 } 
