@@ -17,7 +17,7 @@
 #' @import parallel
 #' @importFrom compiler cmpfun
 #' @export
-ComputeR0 <- function(SimObject, cores = 1, eta_export = TRUE, instExpect_export = TRUE)
+ComputeR0 <- function(SimObject, cores = 1, eta_export = TRUE, instDetail_export = TRUE, instExpect_export = TRUE)
 { 
   checkArgument("SimObject", mustHaveClass("PosteriorSimulation"))
   #cores <- SimObject$modelObject$modelComponents$sampling_control$n_cores
@@ -144,9 +144,13 @@ ComputeR0 <- function(SimObject, cores = 1, eta_export = TRUE, instExpect_export
       colnames(eta_SE) <- paste("location_", 1:ncol(eta_SE), sep = "")
       results[["eta_SE"]] <- eta_SE
     }
+    if (instDetail_export == TRUE) {
+      peb_nse <- matrix(NA, nrow = nTpt, ncol = nLoc)
+      peb_se <- matrix(NA, nrow = nTpt, ncol = nLoc)
+    }
     # End PEB Extract
-
     instantaneousExpectation <- matrix(NA, nrow = nTpt, ncol = nLoc)
+    
     for (i in 1:nTpt)
     {
       # Non-spatial Component
@@ -178,7 +182,11 @@ ComputeR0 <- function(SimObject, cores = 1, eta_export = TRUE, instExpect_export
       else{
         laggedSpatialExpectation <- rep(0, length(nonSpatialExpectation))
       }
-        
+      # Begin PEB Extract
+      if (instDetail_export == TRUE) {
+        peb_nse[i,] <- nonSpatialExpectation
+        peb_se[i,] <- spatialExpectation
+      }
       instantaneousExpectation[i,] <- nonSpatialExpectation + spatialExpectation + laggedSpatialExpectation
     }
     r_EA <- instantaneousExpectation
@@ -187,6 +195,12 @@ ComputeR0 <- function(SimObject, cores = 1, eta_export = TRUE, instExpect_export
     if (instExpect_export == TRUE) {
       colnames(r_EA) <- paste("location_", 1:ncol(r_EA), sep = "")
       results[["instExpect"]] <- r_EA
+      
+      colnames(peb_nse) <- paste("location_", 1:ncol(r_EA), sep = "")
+      results[["nse"]] <- peb_nse
+      
+      colnames(peb_se) <- paste("location_", 1:ncol(r_EA), sep = "")      
+      results[["se"]] <- peb_se
     }
     # End PEB Extract
     
@@ -245,6 +259,8 @@ ComputeR0 <- function(SimObject, cores = 1, eta_export = TRUE, instExpect_export
     SimObject$simulationResults[[sim]][["R_EA"]] <- repNums[[sim]][["r_EA"]]
     SimObject$simulationResults[[sim]][["eta_SE"]] <- repNums[[sim]][["eta_SE"]]
     SimObject$simulationResults[[sim]][["instExpect"]] <- repNums[[sim]][["instExpect"]]
+    SimObject$simulationResults[[sim]][["instNonSpatioExpect"]] <- repNums[[sim]][["peb_nse"]]
+    SimObject$simulationResults[[sim]][["instSpatioExpect"]] <- repNums[[sim]][["peb_se"]]
   }
 
   return(SimObject)
