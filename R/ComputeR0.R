@@ -116,10 +116,10 @@ ComputeR0 <- function(SimObject, cores = 1, eta_export = TRUE, instDetail_export
     }
     # Begin Calculation   
     
-    S0 = SimObject$simulationResults[[sim]]$S[1] 
-    E0 = SimObject$simulationResults[[sim]]$E[1] 
-    I0 = SimObject$simulationResults[[sim]]$I[1]
-    R0 = SimObject$simulationResults[[sim]]$R[1]
+    S0 = SimObject$simulationResults[[sim]]$S[1,] 
+    E0 = SimObject$simulationResults[[sim]]$E[1,] 
+    I0 = SimObject$simulationResults[[sim]]$I[1,]
+    R0 = SimObject$simulationResults[[sim]]$R[1,]
     N = E0 + I0 + R0 + S0
   
     S <- SimObject$simulationResults[[sim]]$S
