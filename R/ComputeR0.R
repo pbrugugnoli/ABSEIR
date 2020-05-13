@@ -205,7 +205,7 @@ ComputeR0 <- function(SimObject, cores = 1, eta_export = TRUE, instDetail_export
     # End PEB Extract
     
     if (transition_priors$mode == "exponential"){
-      p_IR <- 1-exp(-gamma_EI)
+      p_IR <- 1-exp(-gamma_IR)
       for (i in 1:nrow(r_EA))
       {
         pI <- 1
