@@ -899,8 +899,12 @@ simulationResultSet SEIR_sim_node::simulate(Eigen::VectorXd params, bool keepCom
                             report_fraction)(*generator) - Y(0,i)), lpow);
                 }
                 else{
-                    results(w) += std::pow(std::abs((*comparison_compartment)(i,w) -
-                        Y(0, i)), lpow);
+# BEGIN - PEB 20200517 - relative error for several time series
+#                    results(w) += std::pow(std::abs((*comparison_compartment)(i,w) -
+#                        Y(0, i)), lpow);
+                     results(w) += std::pow(std::abs((*comparison_compartment)(i,w) - 
+						     Y(0, i))/(1.0 + Y(0, i)), lpow);
+# END - PEB 20200517 - relative error for several time series
                 }
             }
         }// End i loop
@@ -1104,8 +1108,12 @@ simulationResultSet SEIR_sim_node::simulate(Eigen::VectorXd params, bool keepCom
                                     report_fraction)(*generator) - Y(time_idx,i)), lpow);
                         }
                         else{
-                            results(w) += std::pow(std::abs((cumulative_compartment)(i,w) -
-                                                   Y(time_idx, i)), lpow);
+# BEGIN - PEB 20200517 - relative error for several time series				
+#                            results(w) += std::pow(std::abs((cumulative_compartment)(i,w) -
+#                                                   Y(time_idx, i)), lpow);
+                            results(w) += std::pow(std::abs((cumulative_compartment)(i,w) - 
+							    Y(time_idx, i)) / (1.0 + Y(time_idx, i)), lpow);
+# END - PEB 20200517 - relative error for several time series
                         }
                     }
                 }
@@ -1124,8 +1132,12 @@ simulationResultSet SEIR_sim_node::simulate(Eigen::VectorXd params, bool keepCom
                                     report_fraction)(*generator) - Y(time_idx,i)), lpow);
                         }
                         else{
+# BEGIN - PEB 20200517 - relative error for several time series	
+#                            results(w) += std::pow(std::abs((*comparison_compartment)(i,w) -
+#                                Y(time_idx, i)), lpow);
                             results(w) += std::pow(std::abs((*comparison_compartment)(i,w) -
-                                Y(time_idx, i)), lpow);
+                                Y(time_idx, i)) / (1.0 +  Y(time_idx, i)) , lpow);
+# END - PEB 20200517 - relative error for several time series	
                         }
                     }
                 }
